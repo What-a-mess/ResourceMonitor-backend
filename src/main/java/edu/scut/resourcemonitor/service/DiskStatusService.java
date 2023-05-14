@@ -1,6 +1,7 @@
 package edu.scut.resourcemonitor.service;
 
 import edu.scut.resourcemonitor.entity.DiskStatus;
+import edu.scut.resourcemonitor.util.Updatable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
  * 并且其中各数据高度相关，因此目前只提供getDiskStatus一类的方法
  */
 @Service
-public interface DiskStatusService {
+public interface DiskStatusService extends Updatable {
     /**
      * @return 一组DiskStatus对象，是计算机上所有硬盘状态的集合
      */

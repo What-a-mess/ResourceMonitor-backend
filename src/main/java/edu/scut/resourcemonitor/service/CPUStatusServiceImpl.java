@@ -11,17 +11,29 @@ import oshi.SystemInfo;
 import oshi.driver.linux.proc.DiskStats;
 import oshi.hardware.CentralProcessor;
 
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
 @Service
-public class CPUStatusServiceImpl implements CPUStatusService, Updatable {
+public class CPUStatusServiceImpl implements CPUStatusService {
+
+    /**
+     * 采用scheduledExecutor让每个service自己维护相关的系统数据，以实现：
+     * 1. 更新与请求解耦。用户请求一次更新一次在可能存在多个客户端获取数据的情况下是存在问题的
+     * 2. 每个Service可以根据自己的需要调整更新频率
+     */
+    private ScheduledExecutorService scheduledExecutorService;
 
     private final CentralProcessor centralProcessor;
     private final CPUStatus cpuStatus;
+    int SAMPLE_MILLS = 1;
 
     @Autowired
-    CPUStatusServiceImpl(SystemInfo systemInfo, StateUpdater updater) {
+    CPUStatusServiceImpl(SystemInfo systemInfo) {
         this.centralProcessor = systemInfo.getHardware().getProcessor();
         this.cpuStatus = new CPUStatus();
-        updater.addUpdateObj(this);
+        initScheduleTask();
     }
 
     @Override
@@ -46,8 +58,24 @@ public class CPUStatusServiceImpl implements CPUStatusService, Updatable {
 
     @Override
     public void update() {
-        int SAMPLE_MILLS = 500;
-        cpuStatus.setCPUTotalUsage(centralProcessor.getSystemCpuLoad(SAMPLE_MILLS));
-        cpuStatus.setCPUCoreUsage(centralProcessor.getProcessorCpuLoad(SAMPLE_MILLS));
+        cpuStatus.setCPUTotalUsage(centralProcessor.getSystemCpuLoad(SAMPLE_MILLS * 1000L));
+        cpuStatus.setCPUCoreUsage(centralProcessor.getProcessorCpuLoad(SAMPLE_MILLS * 1000L));
+    }
+
+    private void initScheduleTask() {
+        this.scheduledExecutorService = new ScheduledThreadPoolExecutor(2);
+        this.scheduledExecutorService.scheduleWithFixedDelay(new Runnable() {
+            @Override
+            public void run() {
+                update();
+            }
+        }, 0, SAMPLE_MILLS, TimeUnit.SECONDS);
+    }
+
+    @Override
+    public void setUpdateRate(int second) {
+        SAMPLE_MILLS = second;
+        this.scheduledExecutorService.shutdown();
+        initScheduleTask();
     }
 }

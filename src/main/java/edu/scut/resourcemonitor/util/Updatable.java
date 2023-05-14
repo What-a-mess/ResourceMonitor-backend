@@ -7,4 +7,5 @@ package edu.scut.resourcemonitor.util;
  */
 public interface Updatable {
     void update();
+    void setUpdateRate(int second);
 }

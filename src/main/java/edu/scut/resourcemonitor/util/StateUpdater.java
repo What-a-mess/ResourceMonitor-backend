@@ -8,7 +8,7 @@ import java.util.ArrayList;
 /**
  * 采用订阅机制，定时执行updateStatus函数更新后端的信息
  */
-@Component
+@Deprecated
 public class StateUpdater {
     ArrayList<Updatable> updateObjs = new ArrayList<>();
 

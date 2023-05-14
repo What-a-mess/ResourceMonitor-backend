@@ -1,8 +1,9 @@
 package edu.scut.resourcemonitor.service;
 
 import edu.scut.resourcemonitor.entity.CPUInfo;
+import edu.scut.resourcemonitor.util.Updatable;
 
-public interface CPUStatusService {
+public interface CPUStatusService extends Updatable {
     /**
      * @return 一个0～1的double表示整体CPU占用率
      */

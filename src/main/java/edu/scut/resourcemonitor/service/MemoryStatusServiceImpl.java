@@ -8,17 +8,23 @@ import org.springframework.stereotype.Service;
 import oshi.SystemInfo;
 import oshi.hardware.GlobalMemory;
 
-@Service
-public class MemoryStatusServiceImpl implements MemoryStatusService, Updatable {
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
+@Service
+public class MemoryStatusServiceImpl implements MemoryStatusService {
+
+    private int SAMPLE_MILLS = 1;
     MemStatus memStatus;
     GlobalMemory globalMemory;
+    private ScheduledExecutorService scheduledExecutorService;
 
     @Autowired
-    MemoryStatusServiceImpl(SystemInfo systemInfo, StateUpdater updater) {
+    MemoryStatusServiceImpl(SystemInfo systemInfo) {
         this.globalMemory = systemInfo.getHardware().getMemory();
         memStatus = new MemStatus();
-        updater.addUpdateObj(this);
+        initScheduleTask();
     }
 
     @Override
@@ -35,5 +41,22 @@ public class MemoryStatusServiceImpl implements MemoryStatusService, Updatable {
     public void update() {
         memStatus.setAvailableMem(globalMemory.getAvailable());
         memStatus.setTotalMem(globalMemory.getTotal());
+    }
+
+    private void initScheduleTask() {
+        this.scheduledExecutorService = new ScheduledThreadPoolExecutor(2);
+        this.scheduledExecutorService.scheduleWithFixedDelay(new Runnable() {
+            @Override
+            public void run() {
+                update();
+            }
+        }, 0, SAMPLE_MILLS, TimeUnit.SECONDS);
+    }
+
+    @Override
+    public void setUpdateRate(int second) {
+        SAMPLE_MILLS = second;
+        this.scheduledExecutorService.shutdown();
+        initScheduleTask();
     }
 }
