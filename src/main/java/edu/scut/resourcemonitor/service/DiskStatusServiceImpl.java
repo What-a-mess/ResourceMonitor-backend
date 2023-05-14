@@ -1,7 +1,7 @@
 package edu.scut.resourcemonitor.service;
 
 import edu.scut.resourcemonitor.entity.DiskStatus;
-import edu.scut.resourcemonitor.util.exception.ResourceNotFoundException;
+import edu.scut.resourcemonitor.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import oshi.SystemInfo;

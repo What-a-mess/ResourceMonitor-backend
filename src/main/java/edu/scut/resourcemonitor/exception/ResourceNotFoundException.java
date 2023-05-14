@@ -1,4 +1,4 @@
-package edu.scut.resourcemonitor.util.exception;
+package edu.scut.resourcemonitor.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
