@@ -1,7 +1,12 @@
 package edu.scut.resourcemonitor.service;
 
-import edu.scut.resourcemonitor.entity.CPULoadEntity;
+import edu.scut.resourcemonitor.entity.CPUInfo;
 
 public interface CPUStatusService {
-    CPULoadEntity getTotalCPULoad();
+    double getCPUTotalUsage();
+
+    double[] getCPUCoreUsage();
+
+    CPUInfo getCPUInfo();
+
 }

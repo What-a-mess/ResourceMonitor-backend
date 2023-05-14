@@ -1,6 +1,5 @@
 package edu.scut.resourcemonitor.service;
 
-import edu.scut.resourcemonitor.entity.CPULoadEntity;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +15,8 @@ public class CPUStatusServiceTest {
 
     @Test
     public void getCPULoad() {
-        CPULoadEntity loadEntity = service.getTotalCPULoad();
+        double loadEntity = service.getCPUTotalUsage();
         System.out.println(loadEntity);
-        System.out.println(1 - (1.0 * loadEntity.getIdle() / (loadEntity.getSystem() + loadEntity.getIdle() + loadEntity.getNice() + loadEntity.getIrq() + loadEntity.getIoWait() + loadEntity.getSoftIrq() + loadEntity.getSteal() + loadEntity.getUser())));
     }
 
 }

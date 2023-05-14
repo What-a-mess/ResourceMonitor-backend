@@ -2,6 +2,7 @@ package edu.scut.resourcemonitor.entity;
 
 import lombok.Data;
 
+@Deprecated
 @Data
 public class CPULoadEntity {
     long user;

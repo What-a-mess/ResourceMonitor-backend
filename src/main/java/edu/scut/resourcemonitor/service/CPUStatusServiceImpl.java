@@ -1,5 +1,6 @@
 package edu.scut.resourcemonitor.service;
 
+import edu.scut.resourcemonitor.entity.CPUInfo;
 import edu.scut.resourcemonitor.entity.CPULoadEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ public class CPUStatusServiceImpl implements CPUStatusService {
         centralProcessor = systemInfo.getHardware().getProcessor();
     }
 
+    @Deprecated
     private CPULoadEntity rawLoad2Entity(long[] rawCPULoad) {
         CPULoadEntity loadEntity = new CPULoadEntity();
         loadEntity.setUser(rawCPULoad[CentralProcessor.TickType.USER.getIndex()]);
@@ -29,8 +31,19 @@ public class CPUStatusServiceImpl implements CPUStatusService {
     }
 
     @Override
-    public CPULoadEntity getTotalCPULoad() {
-        long[] rawCPULoad = centralProcessor.getSystemCpuLoadTicks();
-        return rawLoad2Entity(rawCPULoad);
+    public double getCPUTotalUsage() {
+        return centralProcessor.getSystemCpuLoad(10);
+    }
+
+    @Override
+    public double[] getCPUCoreUsage() {
+        return centralProcessor.getProcessorCpuLoad(10);
+    }
+
+    @Override
+    public CPUInfo getCPUInfo() {
+        CPUInfo cpuInfo = new CPUInfo();
+
+        return null;
     }
 }
