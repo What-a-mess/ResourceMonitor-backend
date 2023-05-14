@@ -24,7 +24,7 @@ public class DiskStatusController {
         return diskStatusService.getAllDiskStatus();
     }
 
-    @GetMapping("status/{hashcode}")
+    @GetMapping("{hashcode}/status")
     DiskStatus genDiskStatus(@PathVariable Integer hashcode) {
         return diskStatusService.getDiskStatus(hashcode);
     }

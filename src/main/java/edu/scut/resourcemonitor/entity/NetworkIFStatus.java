@@ -1,8 +1,10 @@
 package edu.scut.resourcemonitor.entity;
 
 import lombok.Data;
+import lombok.ToString;
 
 @Data
+@ToString
 public class NetworkIFStatus {
     String name;
     String displayName;
@@ -13,9 +15,13 @@ public class NetworkIFStatus {
 
     long byteSent;
     long byteRecv;
+    long packetSent;
+    long packetRecv;
     long timestamp;
 
     double sendSpeed;
     double recvSpeed;
+    double sendPktSpeed;
+    double recvPktSpeed;
     int hashcode;
 }

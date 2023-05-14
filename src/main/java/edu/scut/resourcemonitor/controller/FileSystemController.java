@@ -24,7 +24,7 @@ public class FileSystemController {
         return fileSystemStatusService.getAllFileSystemsStatus();
     }
 
-    @GetMapping("status/{hashcode}")
+    @GetMapping("{hashcode}/status")
     public FileSystemStatus getFileSystemStatus(@PathVariable Integer hashcode) {
         return fileSystemStatusService.getFileSystemStatus(hashcode);
     }

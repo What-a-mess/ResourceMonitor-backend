@@ -1,5 +1,6 @@
 package edu.scut.resourcemonitor.service;
 
+import edu.scut.resourcemonitor.entity.NetworkIFStatus;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,8 @@ import java.util.List;
 public class NetworkIFStatusServiceTest {
     @Autowired
     SystemInfo systemInfo;
+    @Autowired
+    NetworkIFStatusService networkIFStatusService;
 
     @Test
     public void simpTest() {
@@ -22,6 +25,14 @@ public class NetworkIFStatusServiceTest {
 
         for (NetworkIF IF : IFList) {
             System.out.println(IF.getName()+"\tdisplay as:" + IF.getDisplayName() + "\t" + IF.getSpeed());
+        }
+    }
+
+    @Test
+    public void serviceTest() {
+        List<NetworkIFStatus> statusList = networkIFStatusService.getAllNetworkIFStatus();
+        for (NetworkIFStatus status : statusList) {
+            System.out.println(status);
         }
     }
 }
