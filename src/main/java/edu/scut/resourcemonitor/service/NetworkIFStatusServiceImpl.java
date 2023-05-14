@@ -52,6 +52,7 @@ public class NetworkIFStatusServiceImpl implements NetworkIFStatusService {
             tempStatus.setHashcode(tempHashCode);
             tempStatus.setTimestamp(tempIF.getTimeStamp());
             tempStatus.setDisplayName(tempIF.getDisplayName());
+            tempStatus.setSpeedRate(tempIF.getSpeed());
             tempStatus.setByteSent(tempIF.getBytesSent());
             tempStatus.setByteRecv(tempIF.getBytesRecv());
             tempStatus.setPacketRecv(tempIF.getPacketsRecv());
