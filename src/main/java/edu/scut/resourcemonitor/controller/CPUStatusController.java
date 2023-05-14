@@ -27,7 +27,7 @@ public class CPUStatusController {
         return cpuStatusService.getCPUCoreUsage();
     }
 
-    @GetMapping("cpuinfo")
+    @GetMapping("info")
     CPUInfo getCPUInfo() {
         return cpuStatusService.getCPUInfo();
     }

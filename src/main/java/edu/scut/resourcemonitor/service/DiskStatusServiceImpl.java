@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 public class DiskStatusServiceImpl implements DiskStatusService {
-    private int SAMPLE_MILLS = 1;
+    private int SAMPLE_INT = 1;
     private final SystemInfo systemInfo;
     private List<DiskStatus> statusList;
     private final Map<Integer, Integer> hashcodeToDiskMapping;
@@ -45,7 +45,6 @@ public class DiskStatusServiceImpl implements DiskStatusService {
         }
     }
 
-    @Override
     public void update() {
         List<HWDiskStore> diskList = systemInfo.getHardware().getDiskStores();
         List<DiskStatus> newStatusList = new ArrayList<>();
@@ -56,7 +55,7 @@ public class DiskStatusServiceImpl implements DiskStatusService {
             // 为了实现每个硬盘单独获取信息的接口，name会放到url中，因此必须符合url格式
             int tempHashCode = tempDisk.getName().hashCode();
             tempStatus.setName(tempDisk.getName());
-            tempStatus.setHashCode(tempHashCode);
+            tempStatus.setHashcode(tempHashCode);
             tempStatus.setTimestamp(tempDisk.getTimeStamp());
             tempStatus.setReadBytes(tempDisk.getReadBytes());
             tempStatus.setWriteBytes(tempDisk.getWriteBytes());
@@ -88,17 +87,17 @@ public class DiskStatusServiceImpl implements DiskStatusService {
 
     private void initScheduleTask() {
         this.scheduledExecutorService = new ScheduledThreadPoolExecutor(2);
-        this.scheduledExecutorService.scheduleWithFixedDelay(new Runnable() {
+        this.scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
                 update();
             }
-        }, 0, SAMPLE_MILLS, TimeUnit.SECONDS);
+        }, 0, SAMPLE_INT, TimeUnit.SECONDS);
     }
 
     @Override
     public void setUpdateRate(int second) {
-        SAMPLE_MILLS = second;
+        SAMPLE_INT = second;
         this.scheduledExecutorService.shutdown();
         initScheduleTask();
     }

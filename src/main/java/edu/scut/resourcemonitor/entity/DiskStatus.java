@@ -31,7 +31,7 @@ public class DiskStatus {
      */
     double diskBusyRate;
     /**
-     * 由于硬盘名称可能含有特殊符号，需要hashCode用来访问特定的硬盘
+     * 由于硬盘名称可能含有特殊符号，需要hashcode用来访问特定的硬盘
      */
-    int hashCode;
+    int hashcode;
 }

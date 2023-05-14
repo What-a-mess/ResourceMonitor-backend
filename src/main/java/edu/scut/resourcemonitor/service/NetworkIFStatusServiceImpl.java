@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 public class NetworkIFStatusServiceImpl implements NetworkIFStatusService {
-    private long SAMPLE_MILLS = 1;
+    private long SAMPLE_INT = 1;
     SystemInfo systemInfo;
     List<NetworkIFStatus> statusList;
     Map<Integer, Integer> hashcodeToIndexMapping;
@@ -40,7 +40,6 @@ public class NetworkIFStatusServiceImpl implements NetworkIFStatusService {
         return statusList.get(hashcodeToIndexMapping.get(hashcode));
     }
 
-    @Override
     public void update() {
         List<NetworkIF> networkIFList = systemInfo.getHardware().getNetworkIFs();
         List<NetworkIFStatus> newStatusList = new ArrayList<>();
@@ -80,19 +79,19 @@ public class NetworkIFStatusServiceImpl implements NetworkIFStatusService {
 
     @Override
     public void setUpdateRate(int second) {
-        SAMPLE_MILLS = second;
+        SAMPLE_INT = second;
         this.scheduledExecutorService.shutdown();
         initScheduleTask();
     }
 
     private void initScheduleTask() {
         this.scheduledExecutorService = new ScheduledThreadPoolExecutor(2);
-        this.scheduledExecutorService.scheduleWithFixedDelay(new Runnable() {
+        this.scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
                 update();
             }
-        }, 0, SAMPLE_MILLS, TimeUnit.SECONDS);
+        }, 0, SAMPLE_INT, TimeUnit.SECONDS);
     }
 
 }

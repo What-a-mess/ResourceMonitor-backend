@@ -20,10 +20,10 @@ public class StateUpdater {
         updateObjs.remove(obj);
     }
 
-    @Scheduled(fixedRate = 500)
+//    @Scheduled(fixedRate = 500)
     public void updateStatus() {
         for (Updatable u : updateObjs) {
-            u.update();
+//            u.update();
         }
     }
 }

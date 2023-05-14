@@ -1,14 +1,10 @@
 package edu.scut.resourcemonitor.service;
 
 import edu.scut.resourcemonitor.entity.CPUInfo;
-import edu.scut.resourcemonitor.entity.CPULoadEntity;
 import edu.scut.resourcemonitor.entity.CPUStatus;
-import edu.scut.resourcemonitor.util.StateUpdater;
-import edu.scut.resourcemonitor.util.Updatable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import oshi.SystemInfo;
-import oshi.driver.linux.proc.DiskStats;
 import oshi.hardware.CentralProcessor;
 
 import java.util.concurrent.ScheduledExecutorService;
@@ -27,7 +23,7 @@ public class CPUStatusServiceImpl implements CPUStatusService {
 
     private final CentralProcessor centralProcessor;
     private final CPUStatus cpuStatus;
-    int SAMPLE_MILLS = 1;
+    int SAMPLE_INT = 1;
 
     @Autowired
     CPUStatusServiceImpl(SystemInfo systemInfo) {
@@ -56,25 +52,26 @@ public class CPUStatusServiceImpl implements CPUStatusService {
         return cpuInfo;
     }
 
-    @Override
-    public void update() {
-        cpuStatus.setCPUTotalUsage(centralProcessor.getSystemCpuLoad(SAMPLE_MILLS * 1000L));
-        cpuStatus.setCPUCoreUsage(centralProcessor.getProcessorCpuLoad(SAMPLE_MILLS * 1000L));
-    }
-
     private void initScheduleTask() {
-        this.scheduledExecutorService = new ScheduledThreadPoolExecutor(2);
-        this.scheduledExecutorService.scheduleWithFixedDelay(new Runnable() {
+        this.scheduledExecutorService = new ScheduledThreadPoolExecutor(3);
+        this.scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
-                update();
+                cpuStatus.setCPUTotalUsage(centralProcessor.getSystemCpuLoad(1000));
             }
-        }, 0, SAMPLE_MILLS, TimeUnit.SECONDS);
+        }, 0, 1, TimeUnit.SECONDS);
+
+        this.scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                cpuStatus.setCPUCoreUsage(centralProcessor.getProcessorCpuLoad(1000));
+            }
+        }, 0, SAMPLE_INT, TimeUnit.SECONDS);
     }
 
     @Override
     public void setUpdateRate(int second) {
-        SAMPLE_MILLS = second;
+        SAMPLE_INT = second;
         this.scheduledExecutorService.shutdown();
         initScheduleTask();
     }
