@@ -1,5 +1,6 @@
 package edu.scut.resourcemonitor.controller;
 
+import edu.scut.resourcemonitor.entity.MemStatus;
 import edu.scut.resourcemonitor.service.MemoryStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +15,14 @@ public class MemoryStatusController {
     @Autowired
     MemoryStatusController(MemoryStatusService memoryStatusService) {
         this.memoryStatusService = memoryStatusService;
+    }
+
+    @GetMapping("status")
+    public MemStatus getMemStatus() {
+        MemStatus memStatus = new MemStatus();
+        memStatus.setTotalMem(memoryStatusService.getTotalMem());
+        memStatus.setAvailableMem(memoryStatusService.getAvailableMem());
+        return memStatus;
     }
 
     @GetMapping("total")

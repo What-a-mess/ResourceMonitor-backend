@@ -63,6 +63,7 @@ public class FileSystemStatusServiceImpl implements FileSystemStatusService {
             tempStatus.setTotalSpace(tempFileSystem.getTotalSpace());
             tempStatus.setUsedSpace(tempStatus.getTotalSpace()-tempStatus.getFreeSpace());
             tempStatus.setSpaceUsage(tempStatus.getUsedSpace()*1.0 / tempStatus.getTotalSpace());
+            tempStatus.setType(tempFileSystem.getType());
 
             hashcodeToIndexMapping.put(tempStatus.getHashcode(), i);
             newStatusList.add(tempStatus);
