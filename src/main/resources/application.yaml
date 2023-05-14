@@ -1,0 +1,14 @@
+server:
+  error:
+    include-exception: true
+    include-message: always
+
+spring:
+  datasource:
+    driver-class-name: org.hsqldb.jdbcDriver
+    username: hsp
+    password: 123456
+    url: jdbc:hsqldb:mem//localhost/packetdb;shutdown=true
+  jpa:
+    hibernate:
+      ddl-auto: create
