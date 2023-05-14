@@ -43,7 +43,10 @@ public class CPUStatusServiceImpl implements CPUStatusService {
     @Override
     public CPUInfo getCPUInfo() {
         CPUInfo cpuInfo = new CPUInfo();
-
-        return null;
+        cpuInfo.setName(centralProcessor.getProcessorIdentifier().getName());
+        cpuInfo.setPhysicalProcessorsCnt(centralProcessor.getPhysicalProcessorCount());
+        cpuInfo.setLogicalProcessorsCnt(centralProcessor.getLogicalProcessorCount());
+        cpuInfo.setBaseFreq(centralProcessor.getProcessorIdentifier().getVendorFreq());
+        return cpuInfo;
     }
 }
