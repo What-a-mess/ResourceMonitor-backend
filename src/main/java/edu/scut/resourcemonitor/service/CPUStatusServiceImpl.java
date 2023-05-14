@@ -2,42 +2,36 @@ package edu.scut.resourcemonitor.service;
 
 import edu.scut.resourcemonitor.entity.CPUInfo;
 import edu.scut.resourcemonitor.entity.CPULoadEntity;
+import edu.scut.resourcemonitor.entity.CPUStatus;
+import edu.scut.resourcemonitor.util.StateUpdater;
+import edu.scut.resourcemonitor.util.Updatable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import oshi.SystemInfo;
+import oshi.driver.linux.proc.DiskStats;
 import oshi.hardware.CentralProcessor;
 
 @Service
-public class CPUStatusServiceImpl implements CPUStatusService {
-    CentralProcessor centralProcessor;
+public class CPUStatusServiceImpl implements CPUStatusService, Updatable {
+
+    private final CentralProcessor centralProcessor;
+    private final CPUStatus cpuStatus;
 
     @Autowired
-    CPUStatusServiceImpl(SystemInfo systemInfo) {
-        centralProcessor = systemInfo.getHardware().getProcessor();
-    }
-
-    @Deprecated
-    private CPULoadEntity rawLoad2Entity(long[] rawCPULoad) {
-        CPULoadEntity loadEntity = new CPULoadEntity();
-        loadEntity.setUser(rawCPULoad[CentralProcessor.TickType.USER.getIndex()]);
-        loadEntity.setSystem(rawCPULoad[CentralProcessor.TickType.SYSTEM.getIndex()]);
-        loadEntity.setIdle(rawCPULoad[CentralProcessor.TickType.IDLE.getIndex()]);
-        loadEntity.setNice(rawCPULoad[CentralProcessor.TickType.NICE.getIndex()]);
-        loadEntity.setIoWait(rawCPULoad[CentralProcessor.TickType.IOWAIT.getIndex()]);
-        loadEntity.setIrq(rawCPULoad[CentralProcessor.TickType.IRQ.getIndex()]);
-        loadEntity.setSoftIrq(rawCPULoad[CentralProcessor.TickType.SOFTIRQ.getIndex()]);
-        loadEntity.setSteal(rawCPULoad[CentralProcessor.TickType.STEAL.getIndex()]);
-        return loadEntity;
+    CPUStatusServiceImpl(SystemInfo systemInfo, StateUpdater updater) {
+        this.centralProcessor = systemInfo.getHardware().getProcessor();
+        this.cpuStatus = new CPUStatus();
+        updater.addUpdateObj(this);
     }
 
     @Override
     public double getCPUTotalUsage() {
-        return centralProcessor.getSystemCpuLoad(10);
+        return cpuStatus.getCPUTotalUsage();
     }
 
     @Override
     public double[] getCPUCoreUsage() {
-        return centralProcessor.getProcessorCpuLoad(10);
+        return cpuStatus.getCPUCoreUsage();
     }
 
     @Override
@@ -48,5 +42,12 @@ public class CPUStatusServiceImpl implements CPUStatusService {
         cpuInfo.setLogicalProcessorsCnt(centralProcessor.getLogicalProcessorCount());
         cpuInfo.setBaseFreq(centralProcessor.getProcessorIdentifier().getVendorFreq());
         return cpuInfo;
+    }
+
+    @Override
+    public void update() {
+        int SAMPLE_MILLS = 500;
+        cpuStatus.setCPUTotalUsage(centralProcessor.getSystemCpuLoad(SAMPLE_MILLS));
+        cpuStatus.setCPUCoreUsage(centralProcessor.getProcessorCpuLoad(SAMPLE_MILLS));
     }
 }
