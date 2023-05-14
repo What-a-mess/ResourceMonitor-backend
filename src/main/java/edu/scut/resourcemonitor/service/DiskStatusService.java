@@ -21,5 +21,5 @@ public interface DiskStatusService extends Updatable {
      * @param diskName 硬盘的名字，如sda
      * @return 对应名称的硬盘的状态对象
      */
-    DiskStatus getDiskStatus(String diskName);
+    DiskStatus getDiskStatus(Integer diskHashCode);
 }

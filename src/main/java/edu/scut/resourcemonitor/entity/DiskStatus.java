@@ -14,9 +14,24 @@ public class DiskStatus {
     long timestamp;
 
     /**
-     * 可以只存储上面的数值，速度放在请求时再计算
-     * 但在更新时一起计算readSpeed和writeSpeed，可以减少请求时的开销
+     * 迄今为止花费在IO上的时间
+     */
+    long transferTime;
+
+    /**
+     * 读写速度readSpeed和writeSpeed
+     * 均以Bytes/s为单位
      */
     double readSpeed;
     double writeSpeed;
+    /**
+     * 一个0~1的值，表示磁盘的忙时间占比，
+     * 由两个status间的timeSpent差除以两个timestamp的差得到，
+     * 表示一段时间内磁盘用于读写时间的比例，表示磁盘占用率（不是空间占用率）
+     */
+    double diskBusyRate;
+    /**
+     * 由于硬盘名称可能含有特殊符号，需要hashCode用来访问特定的硬盘
+     */
+    int hashCode;
 }
