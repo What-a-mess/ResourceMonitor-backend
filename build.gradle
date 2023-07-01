@@ -18,7 +18,9 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     // https://mvnrepository.com/artifact/com.github.oshi/oshi-core
     implementation group: 'com.github.oshi', name: 'oshi-core', version: '6.4.1'
-    testImplementation 'junit:junit:4.13.1'
+//    testImplementation 'junit:junit:4.13.1'
+    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.9.3'
     // https://mvnrepository.com/artifact/org.projectlombok/lombok
     compileOnly 'org.projectlombok:lombok:1.18.26'
     testCompileOnly 'org.projectlombok:lombok:1.18.26'
